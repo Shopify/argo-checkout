@@ -1,5 +1,5 @@
 import {RenderExtension} from './render-extension';
-import type {StandardApi} from './api';
+import type {LineItemRenderAfterApi, StandardApi} from './api';
 
 type Components = typeof import('../components');
 
@@ -25,6 +25,10 @@ export interface ExtensionPoints {
   >;
   'Checkout::KitchenSink': RenderExtension<
     StandardApi<'Checkout::KitchenSink'>,
+    AllComponents
+  >;
+  'Checkout::LineItem::RenderAfter': RenderExtension<
+    LineItemRenderAfterApi,
     AllComponents
   >;
 }

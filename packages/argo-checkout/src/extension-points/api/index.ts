@@ -29,3 +29,4 @@ export type {
   SignedChange,
 } from './standard';
 export type {CurrencyCode, CountryCode} from './shared';
+export type {LineItemRenderAfterApi} from './line-item-render-after';

@@ -14,6 +14,7 @@ export {
   useApplyPrivateMetafieldsChange,
 } from './private-metafields';
 export {useLineItems, useApplyLineItemsChange} from './line-items';
+export {useTargetLineItem} from './target-line-item';
 export {useApplySignedChange} from './signed';
 export {useAppMetafields} from './app-metafields';
 export {useShop} from './shop';
