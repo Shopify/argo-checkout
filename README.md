@@ -1,6 +1,22 @@
 # Argo
 
-Argo is an extensible framework that allows rendering of remote content inside of Shopify's apps.
+Argo allows apps to integrate directly into Shopify surfaces such as Shopify admin, mobile apps, checkout, or POS. It includes a set of consistent UI components, and development tools for authoring them.
+
+With Argo, you create app extensions by writing JavaScript or TypeScript to define your app’s behavior. Shopify securely hosts and renders your UI on the client. The result is a faster user experience, without the performance compromises that come with embedded apps.
+
+## Key features
+
+- Consistent user experience - no iFrames or SameSite headaches. Shopify renders your UI as part of the native platform.
+- Fast and secure -  Shopify uses [remote-ui](https://github.com/Shopify/remote-ui) to render your UI as fast as possible while keeping the platform secure.
+- Standard developer experience - Argo extensions are written in either JavaScript or TypeScript. React developers can leverage the high-level component interface, and vanilla JavaScript developers can use a DOM-like interface.
+
+## Why did Shopify build Argo?
+
+We built Argo so that apps can be first-class citizens on all of Shopify’s UI surfaces. 
+
+To do that, we had to rethink how apps surface UI on all Shopify surfaces, such as the admin, mobile apps, and POS. Today, embedded apps render inside an iframe creating technical barriers to providing a fast and performant user experience. 
+
+Argo uses “frameless” components — Shopify renders your UI for you, so there’s no performance hit, and your app has a fully native look and feel wherever it shows up. This may sound complex, but as you’ll soon see, the code you’ll write to implement this new type of UI extension should feel pretty familiar to you. 
 
 [About this repo](#about-this-repo) | [Commands for Getting Started](#getting-started) | [Contributing](#contributing)
 
