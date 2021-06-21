@@ -83,7 +83,7 @@ self.onerror = (error) => {
 };
 ```
 
-By default, Bugsnag has already sent error for `unhandledrejection`. You only need to listen to `onerror`.
+By default, Bugsnag will listen for `unhandledrejection`. You only need to manually listen to `onerror`.
 
 ### Sentry
 
