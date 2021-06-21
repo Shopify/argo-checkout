@@ -1,6 +1,6 @@
 # Error handling
 
-Because ui extensions script runs in non-browser environment (ex: WebWorker in Web, JavascriptCore on Mobile), it is recommended to listen and send errors to server manually. However, it is still possible to use external libraries for reporting errors. This document shows a couple of examples about how you can handle it.
+Because UI extension scripts run in non-browser environments (Web Worker in web, JavascriptCore on Mobile), it is recommended to manually set up error listeners and error reporting. However, it is possible to use external libraries for error reporting.
 
 ## The generic way of handling errors
 
