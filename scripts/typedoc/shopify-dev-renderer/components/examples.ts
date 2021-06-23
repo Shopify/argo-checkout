@@ -4,6 +4,7 @@ import {resolve, extname} from 'path';
 import type {Packages} from '../../types';
 
 interface Example {
+  filename: string;
   extension: string;
   content: string;
 }
@@ -18,6 +19,7 @@ export function findExamplesForComponent(componentName: string, packages: Packag
     if (fs.existsSync(componentExamplesFolder)) {
       fs.readdirSync(componentExamplesFolder).forEach((file) => {
         examples.set(packageName, {
+          filename: file,
           extension: extname(file).split('.').pop(),
           content: fs.readFileSync(`${componentExamplesFolder}/${file}`, 'utf8'),
         })

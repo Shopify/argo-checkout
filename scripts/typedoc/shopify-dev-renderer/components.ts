@@ -33,6 +33,7 @@ interface Options {
   subcomponentMap?: {[rootComponent: string]: string[]};
   componentsToSkip?: string[];
   generateReadmes?: boolean;
+  /** Compile examples using Rollup and output alongside example files */
   compileExamples?: boolean;
   visibility?: Visibility;
 }
@@ -102,8 +103,34 @@ export async function components(
     markdown += renderExampleImageFor(name, paths.shopifyDevAssets);
 
     const examples = findExamplesForComponent(name, paths.packages);
+
     if (examples.size > 0) {
-      markdown += renderComponentExamplesForComponent(examples);
+      if(compileExamples === true) {
+        const componentExampleFolder = `${componentDocsPath}/${filename}/examples`;
+        if (!fs.existsSync(componentExampleFolder)) {
+          fs.mkdirSync(componentExampleFolder, {recursive: true});
+        }
+
+        examples.forEach(async (example, key) => {
+          // todo: rollup JSX support
+          if(key === 'React') return;
+
+          try {
+            const compiledContent = await compileForSandbox(example.content)
+
+            fs.writeFile(`${componentExampleFolder}/${example.filename}`, compiledContent, function (err) {
+              if (err) throw err;
+            });
+
+          } catch(error) {
+            console.log(`error compiling ${name}/${key}`)
+            console.log(error)
+          }
+
+        })
+      } else {
+        markdown += renderComponentExamplesForComponent(examples);
+      }
     }
 
     const additionalPropsTables: string[] = [];
@@ -204,10 +231,6 @@ export async function components(
       fs.writeFile(readmeFile, readmeMarkdown, function (err) {
         if (err) throw err;
       });
-    }
-
-    if(compileExamples === true) {
-
     }
 
     index += `<li><a href="${componentUrl}">${name}</a></li>`;

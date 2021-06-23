@@ -19,5 +19,7 @@ Each component has general guidelines for usage as well as additional informatio
 - 📱 denotes mobile specific information
 - 🖥 denotes desktop specific information
   `,
+}, {
+  compileExamples: true,
 });
 extensionPoints(paths);

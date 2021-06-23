@@ -30,6 +30,7 @@
   "devDependencies": {
     "@babel/node": "^7.8.7",
     "@microsoft/tsdoc": "^0.12.20",
+    "@rollup/plugin-virtual": "^2.0.3",
     "@sewing-kit/cli": "^0.2.0",
     "@sewing-kit/config": "^0.1.0",
     "@sewing-kit/eslint-plugin": "^0.0.14",
@@ -45,9 +46,12 @@
     "@types/uuid": "^8.3.0",
     "lerna": "^3.22.1",
     "markdown-table": "^2.0.0",
+    "node-fetch": "^2.6.1",
     "nodemon": "^2.0.4",
     "react": ">=17.0.0 <18.0.0",
     "resolve": "^1.17.0",
+    "rollup": "^2.52.2",
+    "rollup-plugin-jsx": "^1.0.3",
     "uuid": "^8.3.2"
   },
   "resolutions": {
