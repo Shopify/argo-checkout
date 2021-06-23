@@ -1,7 +1,7 @@
-import {resolve, extname} from 'path';
+import {resolve} from 'path';
 import * as fs from 'fs';
 
-import type {Paths, Packages} from '../types';
+import type {Paths} from '../types';
 
 import {createDependencyGraph} from '../utilities/dependency-graph';
 
@@ -17,6 +17,11 @@ import {
   firstSentence,
 } from './shared';
 import type {Node, Visibility} from './shared';
+
+import {
+  findExamplesForComponent,
+  renderComponentExamplesForComponent,
+} from './components/examples';
 
 export interface Content {
   title: string;
@@ -96,9 +101,9 @@ export async function components(
 
     markdown += renderExampleImageFor(name, paths.shopifyDevAssets);
 
-    const examples = renderComponentExamplesForComponent(name, paths.packages);
-    if (examples.length > 0) {
-      markdown += examples;
+    const examples = findExamplesForComponent(name, paths.packages);
+    if (examples.size > 0) {
+      markdown += renderComponentExamplesForComponent(examples);
     }
 
     const additionalPropsTables: string[] = [];
@@ -250,56 +255,6 @@ async function buildComponentGraph(componentIndex: string) {
   });
 
   return {nodes, components};
-}
-
-function renderComponentExamplesForComponent(componentName: string, packages: Packages): string {
-  const examples = findExamplesForComponent(componentName, packages);
-
-  let markdown = '';
-
-  if (examples.size > 1) {
-    const sections = [...examples.keys()].join(', ');
-    markdown += `{% sections "${sections}" %}\n\n`;
-
-    examples.forEach(example => {
-      markdown += `{% highlight ${example.extension} %}{% raw %}\n`;
-      markdown += `${example.content}`;
-      markdown += '\n{% endraw %}{% endhighlight %}\n\n';
-    })
-
-    markdown += Object.values(examples).join('\n\n----\n\n');
-    markdown += '{% endsections %}\n\n';
-  } else if (examples.size > 0) {
-    markdown += Object.values(examples).join('\n\n----\n\n');
-  }
-
-  return markdown;
-}
-
-
-interface Example {
-  extension: string;
-  content: string;
-}
-
-function findExamplesForComponent(componentName: string, packages: Packages): Map<string, Example> {
-  const examples = new Map();
-
-  Object.keys(packages).forEach((packageName) => {
-    const packagePath = packages[packageName];
-    const componentExamplesFolder = resolve(`${packagePath}/src/components/${componentName}/examples`);
-
-    if (fs.existsSync(componentExamplesFolder)) {
-      fs.readdirSync(componentExamplesFolder).forEach((file) => {
-        examples.set(packageName, {
-          extension: extname(file).split('.').pop(),
-          content: fs.readFileSync(`${componentExamplesFolder}/${file}`, 'utf8'),
-        })
-      });
-    }
-  });
-
-  return examples;
 }
 
 function renderExampleImageFor(
