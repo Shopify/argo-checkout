@@ -6,8 +6,8 @@ const paths = {
     JavaScript: './packages/admin-ui-extensions',
     React: './packages/admin-ui-extensions-react',
   },
-  outputRoot: '../shopify-dev/content/tools/admin-ui-extensions',
-  shopifyDevUrl: '/tools/admin-ui-extensions',
+  outputRoot: '../shopify-dev/content/api/admin-extensions/ui',
+  shopifyDevUrl: '/api/admin-extensions/ui',
 };
 
 components(paths, {

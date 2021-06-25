@@ -1,11 +1,9 @@
-import {resolve} from 'path';
+import {resolve, extname} from 'path';
 import * as fs from 'fs';
 
-import type {Paths} from '../types';
+import type {Paths} from '../../types';
 
-import {createDependencyGraph} from '../utilities/dependency-graph';
-
-import {compileForSandbox} from './compile-for-sandbox';
+import {createDependencyGraph} from '../../utilities/dependency-graph';
 
 import {
   renderYamlFrontMatter,
@@ -15,13 +13,16 @@ import {
   propsTable,
   strip,
   firstSentence,
-} from './shared';
-import type {Node, Visibility} from './shared';
+} from '../shared';
+import type {Node, Visibility} from '../shared';
 
 import {
   findExamplesForComponent,
-  renderComponentExamplesForComponent,
-} from './components/examples';
+  renderExamplesForComponent,
+  renderSandboxComponentExamples,
+  compileComponentExamples,
+} from './utilities';
+
 
 export interface Content {
   title: string;
@@ -58,6 +59,7 @@ export async function components(
 
   const outputRoot = resolve(`${paths.outputRoot}`);
   const componentDocsPath = resolve(`${paths.outputRoot}/components`);
+  const shopifyDevAssets = resolve(`${paths.shopifyDevAssets}`);
 
   if (!fs.existsSync(outputRoot)) {
     fs.mkdirSync(outputRoot, {recursive: true});
@@ -106,30 +108,13 @@ export async function components(
 
     if (examples.size > 0) {
       if(compileExamples === true) {
-        const componentExampleFolder = `${componentDocsPath}/${filename}/examples`;
-        if (!fs.existsSync(componentExampleFolder)) {
-          fs.mkdirSync(componentExampleFolder, {recursive: true});
-        }
+        const examplesUrl = `/sandbox-examples/${filename}`;
+        const examplesPath = resolve(`../shopify-dev/public/${examplesUrl}`);
 
-        examples.forEach(async (example, key) => {
-          // todo: rollup JSX support
-          if(key === 'React') return;
-
-          try {
-            const compiledContent = await compileForSandbox(example.content)
-
-            fs.writeFile(`${componentExampleFolder}/${example.filename}`, compiledContent, function (err) {
-              if (err) throw err;
-            });
-
-          } catch(error) {
-            console.log(`error compiling ${name}/${key}`)
-            console.log(error)
-          }
-
-        })
+        compileComponentExamples(examples, examplesPath);
+        markdown += renderSandboxComponentExamples(examples, examplesUrl);
       } else {
-        markdown += renderComponentExamplesForComponent(examples);
+        markdown += renderExamplesForComponent(examples);
       }
     }
 
