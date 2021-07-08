@@ -1,9 +1,9 @@
 import {resolve, extname} from 'path';
 import * as fs from 'fs';
 
-import type {Paths, Packages} from '../types';
+import type {Paths} from '../../types';
 
-import {createDependencyGraph} from '../utilities/dependency-graph';
+import {createDependencyGraph} from '../../utilities/dependency-graph';
 
 import {
   renderYamlFrontMatter,
@@ -13,8 +13,16 @@ import {
   propsTable,
   strip,
   firstSentence,
-} from './shared';
-import type {Node, Visibility} from './shared';
+} from '../shared';
+import type {Node, Visibility} from '../shared';
+
+import {
+  findExamplesForComponent,
+  renderExamplesForComponent,
+  renderSandboxComponentExamples,
+  compileComponentExamples,
+} from './utilities';
+
 
 export interface Content {
   title: string;
@@ -26,6 +34,8 @@ interface Options {
   subcomponentMap?: {[rootComponent: string]: string[]};
   componentsToSkip?: string[];
   generateReadmes?: boolean;
+  /** Compile examples using Rollup and output alongside example files */
+  compileExamples?: boolean;
   visibility?: Visibility;
 }
 
@@ -42,12 +52,14 @@ export async function components(
     componentsToSkip = [],
     generateReadmes = false,
     visibility = 'hidden',
+    compileExamples = false,
   } = options;
 
   const visibilityFrontMatter = visibilityToFrontMatterMap.get(visibility);
 
   const outputRoot = resolve(`${paths.outputRoot}`);
   const componentDocsPath = resolve(`${paths.outputRoot}/components`);
+  const shopifyDevAssets = resolve(`${paths.shopifyDevAssets}`);
 
   if (!fs.existsSync(outputRoot)) {
     fs.mkdirSync(outputRoot, {recursive: true});
@@ -92,9 +104,18 @@ export async function components(
 
     markdown += renderExampleImageFor(name, paths.shopifyDevAssets);
 
-    const examples = renderComponentExamplesFor(name, paths.packages);
-    if (examples.length > 0) {
-      markdown += examples;
+    const examples = findExamplesForComponent(name, paths.packages);
+
+    if (examples.size > 0) {
+      if(compileExamples === true) {
+        const examplesUrl = `/sandbox-examples/${filename}`;
+        const examplesPath = resolve(`../shopify-dev/public/${examplesUrl}`);
+
+        compileComponentExamples(examples, examplesPath);
+        markdown += renderSandboxComponentExamples(examples, examplesUrl);
+      } else {
+        markdown += renderExamplesForComponent(examples);
+      }
     }
 
     const additionalPropsTables: string[] = [];
@@ -242,39 +263,6 @@ async function buildComponentGraph(componentIndex: string) {
   });
 
   return {nodes, components};
-}
-
-function renderComponentExamplesFor(name: string, packages: Packages): string {
-  const examples: any = {};
-
-  Object.keys(packages).forEach((packageName) => {
-    const packagePath = packages[packageName];
-    const folder = resolve(`${packagePath}/src/components/${name}/examples`);
-
-    if (fs.existsSync(folder)) {
-      fs.readdirSync(folder).forEach((file) => {
-        const extension = extname(file).split('.').pop();
-        examples[packageName] = `{% highlight ${extension} %}{% raw %}\n`;
-        examples[packageName] += fs.readFileSync(`${folder}/${file}`, 'utf8');
-        examples[packageName] += '\n{% endraw %}{% endhighlight %}\n\n';
-      });
-    }
-  });
-
-  let markdown = '';
-
-  const exampleCount = Object.keys(examples).length;
-
-  if (exampleCount > 1) {
-    const sections = Object.keys(examples).join(', ');
-    markdown += `{% sections "${sections}" %}\n\n`;
-    markdown += Object.values(examples).join('\n\n----\n\n');
-    markdown += '{% endsections %}\n\n';
-  } else if (exampleCount > 0) {
-    markdown += Object.values(examples).join('\n\n----\n\n');
-  }
-
-  return markdown;
 }
 
 function renderExampleImageFor(
