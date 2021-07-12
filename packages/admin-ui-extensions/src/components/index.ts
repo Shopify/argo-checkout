@@ -34,6 +34,8 @@ export {StackItem} from './StackItem';
 export type {StackItemProps} from './StackItem';
 export {Text} from './Text';
 export type {TextProps} from './Text';
+export {TextBlock} from './TextBlock';
+export type {TextBlockProps} from './TextBlock';
 export {TextField} from './TextField';
 export type {TextFieldProps} from './TextField';
 export {Thumbnail} from './Thumbnail';

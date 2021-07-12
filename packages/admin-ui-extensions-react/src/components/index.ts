@@ -17,5 +17,6 @@ export * from './Spinner';
 export * from './Stack';
 export * from './StackItem';
 export * from './Text';
+export * from './TextBlock';
 export * from './TextField';
 export * from './Thumbnail';

@@ -21,6 +21,7 @@ export type {
   StackProps,
   StackItemProps,
   TextProps,
+  TextBlockProps,
   TextFieldProps,
   ThumbnailProps,
   OptionListProps,
