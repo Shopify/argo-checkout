@@ -22,6 +22,9 @@ export type ButtonProps = RequiredTitleOrIcon & {
    */
   primary?: boolean;
 
+  /** Allows the button to submit a form */
+  submit?: boolean;
+
   /** Callback when button is pressed */
   onPress?(): void;
 
