@@ -8,6 +8,7 @@ export type {
   ArgumentsForExtension,
   InputForRenderExtension,
   ReturnTypeForExtension,
+  PostPurchaseRenderApi,
   StandardApi,
   Version,
 } from './extension-points';

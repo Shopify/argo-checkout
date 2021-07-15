@@ -6,6 +6,7 @@ export type {
   ArgumentsForExtension,
   InputForRenderExtension,
   RenderExtension,
+  PostPurchaseRenderApi,
   RenderExtensions,
   ReturnTypeForExtension,
   ShopifyGlobal,
