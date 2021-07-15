@@ -66,7 +66,7 @@ export async function components(
 
   index += `${description}\n\n`;
 
-  index += '<ul style="column-count: auto;column-width: 12rem;">';
+  const indexContent = [];
 
   components.forEach(({value: {name, docs, props}}: any) => {
     if (componentsToSkip.includes(name)) return;
@@ -204,10 +204,14 @@ export async function components(
       });
     }
 
-    index += `<li><a href="${componentUrl}">${name}</a></li>`;
+    indexContent.push(`<li><a href="${componentUrl}">${name}</a></li>`);
   });
 
-  index += '</ul>';
+  index += [
+    '<ul style="column-count: auto;column-width: 12rem;">',
+    ...indexContent,
+    '</ul>',
+  ].join('\n');
 
   // Write the component table of contents
   fs.writeFile(indexFile, index, function (err) {

@@ -49,7 +49,7 @@ export async function adminExtensionApi(paths: Paths, options: Options) {
 
   const extensionApisUrl = `${paths.shopifyDevUrl}/api`;
 
-  let indexContent = '';
+  const indexContent = [];
 
   allApis.forEach(({name, docs, properties}) => {
     if (componentsToSkip.includes(name)) return;
@@ -105,7 +105,7 @@ export async function adminExtensionApi(paths: Paths, options: Options) {
       if (err) throw err;
     });
 
-    indexContent += `<li><a href="${url}">${name}</a></li>`;
+    indexContent.push(`<li><a href="${url}">${name}</a></li>`);
   });
 
   // Write index file
@@ -118,9 +118,7 @@ export async function adminExtensionApi(paths: Paths, options: Options) {
     description: 'Extension points API',
   });
 
-  indexMarkdown += '<ul>';
-  indexMarkdown += indexContent;
-  indexMarkdown += '</ul>';
+  indexMarkdown += ['<ul>', ...indexContent, '</ul>'].join('\n');
 
   fs.writeFile(indexFile, indexMarkdown, function (err) {
     if (err) throw err;

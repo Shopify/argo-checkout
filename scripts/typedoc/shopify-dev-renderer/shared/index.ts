@@ -353,13 +353,13 @@ function responsive(breakpoint: any, additionalPropsTables: string[]) {
   markdown += `Responsive is a [Mapped Type](https://www.typescriptlang.org/docs/handbook/2/mapped-types.html). It allows you to set different values at different breakpoints by providing an object where the keys are Breakpoints: <code>${breakpoints}</code>\n\n`;
   markdown +=
     'For example, if a property accepts `number | Responsive`, it would accept a number or an object where the keys are Breakpoints and the values are numbers:\n\n';
-  markdown += `{% highlight js %}{% raw %}
+  markdown += `\`\`\`js
 {
   'base': 1,
   'small': 0.5,
   'large': 2
 }
-{% endraw %}{% endhighlight %}\n\n`;
+\`\`\`\n\n`;
 
   return markdown;
 }
